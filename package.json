@@ -8,6 +8,8 @@
     "start": "next start --hostname 127.0.0.1"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.100.9",
+    "msw": "^2.14.3",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest"

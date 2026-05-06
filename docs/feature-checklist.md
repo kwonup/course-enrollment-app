@@ -2,32 +2,33 @@
 
 ## 0. 초기 세팅
 
-- [ ] Next.js App Router 프로젝트 생성
-- [ ] TypeScript 설정
-- [ ] Tailwind CSS 설정
+- [x] Next.js App Router 프로젝트 생성
+- [x] TypeScript 설정
+- [x] Tailwind CSS 설정
 - [ ] shadcn/ui 설정
 - [ ] React Hook Form 설치
 - [ ] Zod 설치
 - [ ] `@hookform/resolvers` 설치
-- [ ] TanStack Query 설치
-- [ ] MSW 설치
-- [ ] 기본 폴더 구조 생성
+- [x] TanStack Query 설치
+- [x] MSW 설치
+- [x] 기본 폴더 구조 생성
 
 ## 1. 프로젝트 구조
 
-- [ ] `src/app/layout.tsx` 생성
-- [ ] `src/app/page.tsx` 생성
-- [ ] `src/app/providers.tsx` 생성
-- [ ] `src/features/enrollment/api` 생성
-- [ ] `src/features/enrollment/components` 생성
-- [ ] `src/features/enrollment/hooks` 생성
-- [ ] `src/features/enrollment/schemas` 생성
-- [ ] `src/features/enrollment/types` 생성
-- [ ] `src/features/enrollment/utils` 생성
-- [ ] `src/features/enrollment/constants` 생성
-- [ ] `src/shared/components` 생성
-- [ ] `src/shared/lib` 생성
-- [ ] `src/mocks` 생성
+- [x] `src/app/layout.tsx` 생성
+- [x] `src/app/page.tsx` 생성
+- [x] `src/app/providers.tsx` 생성
+- [x] `src/features/enrollment/api` 생성
+- [x] `src/features/enrollment/components` 생성
+- [x] `src/features/enrollment/hooks` 생성
+- [x] `src/features/enrollment/schemas` 생성
+- [x] `src/features/enrollment/types` 생성
+- [x] `src/features/enrollment/utils` 생성
+- [x] `src/features/enrollment/constants` 생성
+- [x] `src/shared/components` 생성
+- [x] `src/shared/lib` 생성
+- [x] `src/shared/types` 생성
+- [x] `src/mocks` 생성
 
 ## 2. 타입 설계
 
@@ -42,7 +43,7 @@
 
 ## 3. Mock API
 
-- [ ] MSW browser worker 설정
+- [x] MSW browser worker 설정
 - [ ] 강의 mock data 작성
 - [ ] `GET /api/courses` 핸들러 구현
 - [ ] 카테고리 필터링 처리
@@ -63,8 +64,8 @@
 
 ## 5. TanStack Query
 
-- [ ] QueryClient 설정
-- [ ] Provider 연결
+- [x] QueryClient 설정
+- [x] Provider 연결
 - [ ] `useCoursesQuery` 작성
 - [ ] `useEnrollmentMutation` 작성
 - [ ] 강의 목록 로딩 상태 처리
