@@ -69,3 +69,37 @@
 
 - React Hook Form, Zod, shadcn/ui 연결
 - 수강 신청 도메인 타입, 스키마, API, Mock API 구현
+
+## 2026-05-07
+
+### 변경 사항
+
+- 수강 신청 도메인의 API 요청/응답 타입을 `src/features/enrollment/types/api.ts`에 정의했다.
+- 폼 입력 타입을 `src/features/enrollment/types/form.ts`에 별도로 정의했다.
+- 강의 카테고리와 수강 신청 스텝 상수를 `src/features/enrollment/constants`에 추가했다.
+- `src/mocks/data/courses.ts`에 카테고리별 Mock 강의 데이터를 작성했다.
+- 완료된 타입 설계와 Mock 데이터 작성 항목을 `docs/feature-checklist.md`에 반영했다.
+
+### 변경 이유
+
+- API payload와 React Hook Form에서 사용할 입력 상태는 생명주기와 표현 방식이 다르므로 타입을 분리했다.
+- 개인 신청과 단체 신청은 `type` 필드를 기준으로 discriminated union을 구성해 이후 제출 payload 생성 시 불필요한 단체 정보가 남지 않도록 설계했다.
+- 카테고리와 스텝은 UI, API, 검증 로직에서 반복 사용될 가능성이 높아 상수로 분리했다.
+- Mock 강의 데이터는 이후 MSW handler와 강의 목록 조회 기능을 구현할 때 재사용할 수 있도록 `Course` 타입 기준으로 작성했다.
+
+### 영향 범위
+
+- `src/features/enrollment/types/*`
+- `src/features/enrollment/constants/*`
+- `src/mocks/data/courses.ts`
+- `docs/feature-checklist.md`
+
+### 검증 내용
+
+- `npm run build`로 TypeScript 타입 검사와 Next.js production build를 확인했다.
+
+### 남은 과제
+
+- Zod schema 작성
+- API 함수와 MSW handler 구현
+- React Hook Form 기반 멀티스텝 폼 구현

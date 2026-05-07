@@ -32,19 +32,19 @@
 
 ## 2. 타입 설계
 
-- [ ] `Course` 타입 정의
-- [ ] `CourseListResponse` 타입 정의
-- [ ] `PersonalEnrollmentRequest` 타입 정의
-- [ ] `GroupEnrollmentRequest` 타입 정의
-- [ ] `EnrollmentResponse` 타입 정의
-- [ ] `ErrorResponse` 타입 정의
-- [ ] 개인 / 단체 신청 discriminated union 타입 정의
-- [ ] 폼 입력 타입과 API 요청 타입 분리
+- [x] `Course` 타입 정의
+- [x] `CourseListResponse` 타입 정의
+- [x] `PersonalEnrollmentRequest` 타입 정의
+- [x] `GroupEnrollmentRequest` 타입 정의
+- [x] `EnrollmentResponse` 타입 정의
+- [x] `ErrorResponse` 타입 정의
+- [x] 개인 / 단체 신청 discriminated union 타입 정의
+- [x] 폼 입력 타입과 API 요청 타입 분리
 
 ## 3. Mock API
 
 - [x] MSW browser worker 설정
-- [ ] 강의 mock data 작성
+- [x] 강의 mock data 작성
 - [ ] `GET /api/courses` 핸들러 구현
 - [ ] 카테고리 필터링 처리
 - [ ] `POST /api/enrollments` 핸들러 구현
