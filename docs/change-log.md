@@ -103,3 +103,41 @@
 - Zod schema 작성
 - API 함수와 MSW handler 구현
 - React Hook Form 기반 멀티스텝 폼 구현
+
+## 2026-05-08
+
+### 변경 사항
+
+- MSW browser worker가 Next.js 클라이언트 개발 환경에서 시작되도록 `src/mocks/start-msw.ts`를 추가하고 `src/app/providers.tsx`에 연결했다.
+- `GET /api/courses` handler를 구현해 강의 목록 조회와 카테고리 필터링을 지원했다.
+- `POST /api/enrollments` handler를 구현해 신청 성공, `COURSE_FULL`, `DUPLICATE_ENROLLMENT`, `INVALID_INPUT` 응답을 재현할 수 있게 했다.
+- 브라우저 Service Worker 실행을 위해 `public/mockServiceWorker.js`를 생성했다.
+- 완료된 Mock API 항목을 `docs/feature-checklist.md`에 반영했다.
+
+### 변경 이유
+
+- 실제 백엔드 없이도 강의 조회, 신청 제출, 서버 에러 UX를 이후 단계에서 검증할 수 있도록 Mock API를 먼저 구성했다.
+- 에러 응답은 `ErrorResponse` 타입의 `code`, `message`, `details` 구조를 유지해 React Hook Form의 field error 매핑을 준비했다.
+- MSW는 브라우저 Service Worker 기반이므로 Next.js의 클라이언트 Provider에서 개발 환경에만 시작하도록 분리했다.
+
+### 영향 범위
+
+- `src/mocks/browser.ts`
+- `src/mocks/handlers.ts`
+- `src/mocks/start-msw.ts`
+- `src/app/providers.tsx`
+- `public/mockServiceWorker.js`
+- `package.json`
+- `package-lock.json`
+- `docs/feature-checklist.md`
+
+### 검증 내용
+
+- `npm run build`로 TypeScript 타입 검사와 Next.js production build를 확인했다.
+
+### 남은 과제
+
+- API 함수 작성
+- TanStack Query hooks 작성
+- Zod schema 작성
+- React Hook Form 기반 UI 구현

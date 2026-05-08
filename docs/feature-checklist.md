@@ -45,13 +45,13 @@
 
 - [x] MSW browser worker 설정
 - [x] 강의 mock data 작성
-- [ ] `GET /api/courses` 핸들러 구현
-- [ ] 카테고리 필터링 처리
-- [ ] `POST /api/enrollments` 핸들러 구현
-- [ ] 신청 성공 응답 구현
-- [ ] `COURSE_FULL` 에러 케이스 구현
-- [ ] `DUPLICATE_ENROLLMENT` 에러 케이스 구현
-- [ ] `INVALID_INPUT` 에러 케이스 구현
+- [x] `GET /api/courses` 핸들러 구현
+- [x] 카테고리 필터링 처리
+- [x] `POST /api/enrollments` 핸들러 구현
+- [x] 신청 성공 응답 구현
+- [x] `COURSE_FULL` 에러 케이스 구현
+- [x] `DUPLICATE_ENROLLMENT` 에러 케이스 구현
+- [x] `INVALID_INPUT` 에러 케이스 구현
 - [ ] 네트워크 실패 케이스 구현
 
 ## 4. API 함수

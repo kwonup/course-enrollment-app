@@ -1,3 +1,4 @@
+// 강의 목록 조회 Mock API에서 사용할 테스트용 강의 데이터입니다.
 import type { Course } from "@/features/enrollment/types";
 
 export const courses: Course[] = [

@@ -1,4 +1,5 @@
 // 서버와 주고받는 데이터 타입 정의
+// API 요청/응답 payload의 계약을 정의하며, 폼 내부 상태 타입과 분리합니다.
 import type { CourseCategory } from "@/features/enrollment/constants";
 
 export interface Course {

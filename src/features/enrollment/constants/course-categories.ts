@@ -1,3 +1,4 @@
+// 강의 카테고리의 허용 값과 화면 표시용 라벨을 정의합니다.
 export const COURSE_CATEGORIES = [
   "development",
   "design",

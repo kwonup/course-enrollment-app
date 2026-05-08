@@ -1,3 +1,4 @@
+// 수강 신청 멀티스텝 흐름에서 사용할 단계 목록과 단계 ID 타입을 정의합니다.
 export const ENROLLMENT_STEPS = [
   {
     id: "course",

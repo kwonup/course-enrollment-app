@@ -1,3 +1,4 @@
+// React Hook Form에서 관리할 수강 신청 입력 상태 타입을 정의합니다.
 import type { EnrollmentStepId } from "@/features/enrollment/constants";
 import type { CourseCategory } from "@/features/enrollment/constants";
 

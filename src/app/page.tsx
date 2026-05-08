@@ -1,3 +1,4 @@
+// 아직 기능 UI를 붙이기 전, 프로젝트 실행 확인을 위한 기본 홈 화면입니다.
 export default function Home() {
   return (
     <main className="min-h-screen bg-slate-50 text-slate-950">
