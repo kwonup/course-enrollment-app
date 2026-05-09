@@ -7,7 +7,7 @@
 - [x] Tailwind CSS 설정
 - [ ] shadcn/ui 설정
 - [ ] React Hook Form 설치
-- [ ] Zod 설치
+- [x] Zod 설치
 - [ ] `@hookform/resolvers` 설치
 - [x] TanStack Query 설치
 - [x] MSW 설치
@@ -76,15 +76,15 @@
 
 ## 6. Zod Schema
 
-- [ ] 강의 선택 스텝 schema 작성
-- [ ] 수강생 정보 schema 작성
-- [ ] 개인 신청 schema 작성
-- [ ] 단체 신청 schema 작성
-- [ ] 약관 동의 schema 작성
-- [ ] 참가자 명단 schema 작성
-- [ ] 전화번호 검증 정규식 작성
-- [ ] 참가자 이메일 중복 검증 작성
-- [ ] 수강 동기 300자 제한 검증 작성
+- [x] 강의 선택 스텝 schema 작성
+- [x] 수강생 정보 schema 작성
+- [x] 개인 신청 schema 작성
+- [x] 단체 신청 schema 작성
+- [x] 약관 동의 schema 작성
+- [x] 참가자 명단 schema 작성
+- [x] 전화번호 검증 정규식 작성
+- [x] 참가자 이메일 중복 검증 작성
+- [x] 수강 동기 300자 제한 검증 작성
 
 ## 7. 멀티스텝 폼
 

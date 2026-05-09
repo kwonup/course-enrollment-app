@@ -174,3 +174,38 @@
 - 서버 에러 메시지 변환 유틸 작성
 - Zod schema 작성
 - React Hook Form 기반 UI 구현
+
+## 2026-05-09
+
+### 변경 사항
+
+- React Hook Form과 연결할 Zod schema를 `src/features/enrollment/schemas`에 단계별로 추가했다.
+- 강의 선택, 신청자 정보, 단체 정보, 참가자 명단, 약관 동의, 전체 enrollment form schema를 분리했다.
+- 전체 form schema는 `type` 필드를 기준으로 개인 신청과 단체 신청을 discriminated union으로 검증하도록 구성했다.
+- 전화번호, 이메일 형식, 신청 인원수 2~10명, 참가자 이메일 중복, 수강 동기 300자 제한 검증을 추가했다.
+- schema 기반 타입을 `z.infer`로 추론해 export했다.
+- Zod 설치와 schema 작성 완료 항목을 `docs/feature-checklist.md`에 반영했다.
+
+### 변경 이유
+
+- 스텝별 이동 전 현재 단계 필드만 검증하고, 최종 제출 시 전체 데이터를 다시 검증할 수 있도록 schema를 역할별로 분리했다.
+- 개인 신청과 단체 신청은 제출 payload 구조가 다르므로 discriminated union으로 검증해 단체 신청 필드가 필요한 경우와 필요하지 않은 경우를 명확히 나눴다.
+- 폼 타입은 schema에서 `z.infer`로 추론할 수 있게 해 검증 규칙과 타입 정의가 어긋날 가능성을 줄였다.
+
+### 영향 범위
+
+- `src/features/enrollment/schemas/*`
+- `src/features/enrollment/constants/steps.ts`
+- `package.json`
+- `package-lock.json`
+- `docs/feature-checklist.md`
+
+### 검증 내용
+
+- `npm run build`로 TypeScript 타입 검사와 Next.js production build를 확인했다.
+
+### 남은 과제
+
+- `@hookform/resolvers` 설치와 React Hook Form 연결
+- 스텝별 검증 실행 로직 구현
+- 서버 에러를 React Hook Form field error로 반영하는 로직 구현
