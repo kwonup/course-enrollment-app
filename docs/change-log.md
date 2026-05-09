@@ -209,3 +209,41 @@
 - `@hookform/resolvers` 설치와 React Hook Form 연결
 - 스텝별 검증 실행 로직 구현
 - 서버 에러를 React Hook Form field error로 반영하는 로직 구현
+
+## 2026-05-09
+
+### 변경 사항
+
+- `EnrollmentForm` 루트 컴포넌트를 추가하고 React Hook Form `FormProvider`를 연결했다.
+- 현재 스텝 값을 폼 상태의 `currentStep`으로 관리하고, 다음/이전/특정 스텝 이동 함수를 추가했다.
+- 다음 단계 이동 시 현재 스텝에 해당하는 필드만 `trigger`로 검증할 수 있는 구조를 추가했다.
+- `StepIndicator`, `CourseSelectStep`, `ApplicantInfoStep`, `ConfirmStep` placeholder 컴포넌트를 추가했다.
+- 홈 페이지에서 `EnrollmentForm`을 렌더링하도록 변경했다.
+- React Hook Form과 `@hookform/resolvers` 설치 및 멀티스텝 폼 뼈대 완료 항목을 `docs/feature-checklist.md`에 반영했다.
+
+### 변경 이유
+
+- 실제 입력 필드를 구현하기 전에 폼 상태의 단일 출처를 React Hook Form으로 고정해 이후 스텝 간 데이터 유지와 검증 흐름을 안정적으로 붙이기 위함이다.
+- 스텝 컴포넌트를 placeholder로 먼저 분리해 이후 강의 선택, 신청자 정보, 확인/제출 UI를 독립적으로 확장할 수 있게 했다.
+- 스텝 이동 함수와 검증 필드 매핑을 루트 컴포넌트에 두어 다음 단계에서 필드가 추가되어도 이동 흐름을 크게 바꾸지 않도록 했다.
+
+### 영향 범위
+
+- `src/features/enrollment/components/*`
+- `src/features/enrollment/constants/form-defaults.ts`
+- `src/features/enrollment/constants/index.ts`
+- `src/app/page.tsx`
+- `package.json`
+- `package-lock.json`
+- `docs/feature-checklist.md`
+
+### 검증 내용
+
+- `npm run build`로 TypeScript 타입 검사와 Next.js production build를 확인했다.
+
+### 남은 과제
+
+- 실제 강의 선택 UI 구현
+- 신청자 입력 필드 구현
+- 최종 확인 및 제출 UI 구현
+- 서버 에러를 React Hook Form field error로 반영하는 로직 구현

@@ -42,3 +42,4 @@ export type GroupEnrollmentFormSchemaValues = z.infer<
   typeof groupEnrollmentFormSchema
 >;
 export type EnrollmentFormSchemaValues = z.infer<typeof enrollmentFormSchema>;
+export type EnrollmentFormInputValues = z.input<typeof enrollmentFormSchema>;
