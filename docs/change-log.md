@@ -97,6 +97,7 @@
 ### 검증 내용
 
 - `npm run build`로 TypeScript 타입 검사와 Next.js production build를 확인했다.
+- Playwright screenshot으로 MSW 준비 후 1단계 강의 선택 화면이 렌더링되는 것을 확인했다.
 
 ### 남은 과제
 
@@ -247,3 +248,39 @@
 - 신청자 입력 필드 구현
 - 최종 확인 및 제출 UI 구현
 - 서버 에러를 React Hook Form field error로 반영하는 로직 구현
+
+## 2026-05-09
+
+### 변경 사항
+
+- 1단계 `CourseSelectStep`에 강의 목록 조회, 카테고리 필터, 강의 카드, 강의 선택 기능을 구현했다.
+- 정원 마감 강의는 선택할 수 없도록 처리하고, 잔여 정원이 3명 이하인 강의에는 마감 임박 배지를 표시했다.
+- 선택한 강의 요약과 개인/단체 신청 유형 선택 UI를 추가했다.
+- 강의 목록 로딩, 빈 상태, 에러 상태 UI를 추가했다.
+- MSW worker가 준비되기 전에 강의 목록 query가 먼저 실행되지 않도록 `Providers`에서 mock worker 준비 상태를 기다리게 했다.
+- 1단계 강의 선택 관련 완료 항목을 `docs/feature-checklist.md`에 반영했다.
+
+### 변경 이유
+
+- 강의 선택값과 신청 유형은 React Hook Form 상태에 저장해 다음 단계로 이동하거나 이전 단계로 돌아와도 값이 유지되도록 했다.
+- 정원 마감 강의는 선택 자체를 막아 이후 제출 시 `COURSE_FULL` 가능성을 줄이고, 사용자에게 선택 불가 사유를 즉시 보여주도록 했다.
+- 강의 목록은 MSW 기반 API를 통해 조회하므로 로딩/에러/빈 상태를 함께 구현해 실제 서버 상태 UI를 검증할 수 있게 했다.
+
+### 영향 범위
+
+- `src/features/enrollment/components/course-select-step.tsx`
+- `src/features/enrollment/components/course-card.tsx`
+- `src/features/enrollment/components/index.ts`
+- `src/app/providers.tsx`
+- `docs/feature-checklist.md`
+
+### 검증 내용
+
+- `npm run build`로 TypeScript 타입 검사와 Next.js production build를 확인했다.
+- Playwright screenshot으로 MSW 준비 후 1단계 강의 선택 화면이 렌더링되는 것을 확인했다.
+
+### 남은 과제
+
+- 2단계 신청자 정보 입력 UI 구현
+- 단체 신청 조건부 필드 구현
+- 최종 확인 및 제출 UI 구현
