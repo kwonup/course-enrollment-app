@@ -21,6 +21,10 @@ export interface CourseListResponse {
 }
 
 export type EnrollmentType = "personal" | "group";
+export type EnrollmentErrorCode =
+  | "COURSE_FULL"
+  | "DUPLICATE_ENROLLMENT"
+  | "INVALID_INPUT";
 
 //신청자 공통 정보
 export interface EnrollmentApplicant {

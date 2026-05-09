@@ -56,18 +56,18 @@
 
 ## 4. API 함수
 
-- [ ] 강의 목록 조회 함수 작성
-- [ ] 수강 신청 제출 함수 작성
-- [ ] 공통 fetcher 작성
-- [ ] API 에러 파싱 유틸 작성
+- [x] 강의 목록 조회 함수 작성
+- [x] 수강 신청 제출 함수 작성
+- [x] 공통 fetcher 작성
+- [x] API 에러 파싱 유틸 작성
 - [ ] 서버 에러 메시지 변환 유틸 작성
 
 ## 5. TanStack Query
 
 - [x] QueryClient 설정
 - [x] Provider 연결
-- [ ] `useCoursesQuery` 작성
-- [ ] `useEnrollmentMutation` 작성
+- [x] `useCoursesQuery` 작성
+- [x] `useEnrollmentMutation` 작성
 - [ ] 강의 목록 로딩 상태 처리
 - [ ] 강의 목록 에러 상태 처리
 - [ ] 신청 제출 pending 상태 처리

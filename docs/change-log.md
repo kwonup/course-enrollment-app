@@ -141,3 +141,36 @@
 - TanStack Query hooks 작성
 - Zod schema 작성
 - React Hook Form 기반 UI 구현
+
+## 2026-05-08
+
+### 변경 사항
+
+- 공통 `fetcher`를 추가해 JSON 요청/응답 처리와 실패 응답 파싱을 한 곳으로 모았다.
+- `fetchCourses`, `submitEnrollment` API 함수를 `src/features/enrollment/api`에 추가했다.
+- `ApiError`, `parseApiError`, `isApiError`, `isKnownEnrollmentErrorCode`를 추가해 `ErrorResponse` 기반 서버 에러를 안전하게 다룰 수 있게 했다.
+- `useCoursesQuery`, `useEnrollmentMutation` hook을 `src/features/enrollment/hooks`에 추가했다.
+- API 함수와 TanStack Query hook 완료 항목을 `docs/feature-checklist.md`에 반영했다.
+
+### 변경 이유
+
+- UI 컴포넌트가 직접 `fetch`를 호출하지 않도록 API 계층을 분리해 이후 화면 구현 시 서버 통신 책임을 명확히 하기 위함이다.
+- `COURSE_FULL`, `DUPLICATE_ENROLLMENT`, `INVALID_INPUT`은 `ApiError.response.code`와 `isKnownEnrollmentErrorCode`로 구분할 수 있게 했다.
+- TanStack Query hook은 서버 상태 조회/변경의 진입점으로 두어 로딩, 성공, 실패 상태를 이후 UI에서 일관되게 사용할 수 있게 했다.
+
+### 영향 범위
+
+- `src/features/enrollment/api/*`
+- `src/features/enrollment/hooks/*`
+- `src/features/enrollment/types/api.ts`
+- `docs/feature-checklist.md`
+
+### 검증 내용
+
+- `npm run build`로 TypeScript 타입 검사와 Next.js production build를 확인했다.
+
+### 남은 과제
+
+- 서버 에러 메시지 변환 유틸 작성
+- Zod schema 작성
+- React Hook Form 기반 UI 구현
