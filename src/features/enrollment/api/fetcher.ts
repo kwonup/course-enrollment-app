@@ -1,5 +1,5 @@
 // fetch 호출 공통 옵션, JSON 직렬화, 실패 응답 파싱을 담당하는 공통 fetcher입니다.
-import { parseApiError } from "@/features/enrollment/api/errors";
+import { NetworkError, parseApiError } from "@/features/enrollment/api/errors";
 
 interface FetcherOptions extends Omit<RequestInit, "body"> {
   body?: unknown;
@@ -20,6 +20,8 @@ export async function fetcher<TResponse>(
       ...headers,
     },
     body: hasBody ? JSON.stringify(body) : undefined,
+  }).catch(() => {
+    throw new NetworkError();
   });
 
   if (!response.ok) {

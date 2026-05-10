@@ -2,7 +2,12 @@
 
 // 수강 신청 멀티스텝 폼의 루트 컴포넌트로, RHF 상태와 스텝 이동을 관리합니다.
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { FormProvider, type FieldPath, useForm } from "react-hook-form";
+import {
+  getEnrollmentErrorMessage,
+  isApiError,
+} from "@/features/enrollment/api";
 import {
   DEFAULT_ENROLLMENT_FORM_VALUES,
   ENROLLMENT_STEPS,
@@ -17,7 +22,13 @@ import type { EnrollmentType } from "@/features/enrollment/types";
 import { ApplicantInfoStep } from "@/features/enrollment/components/applicant-info-step";
 import { ConfirmStep } from "@/features/enrollment/components/confirm-step";
 import { CourseSelectStep } from "@/features/enrollment/components/course-select-step";
+import { EnrollmentSuccess } from "@/features/enrollment/components/enrollment-success";
 import { StepIndicator } from "@/features/enrollment/components/step-indicator";
+import { useEnrollmentMutation } from "@/features/enrollment/hooks";
+import {
+  applyInvalidInputFieldErrors,
+  toEnrollmentRequest,
+} from "@/features/enrollment/utils";
 
 const applicantStepFields: FieldPath<EnrollmentFormInputValues>[] = [
   "applicant.name",
@@ -60,6 +71,10 @@ function getPreviousStepId(currentStep: EnrollmentStepId) {
 }
 
 export function EnrollmentForm() {
+  const [submitErrorMessage, setSubmitErrorMessage] = useState("");
+  const [submittedValues, setSubmittedValues] =
+    useState<EnrollmentFormSchemaValues | null>(null);
+  const enrollmentMutation = useEnrollmentMutation();
   const form = useForm<
     EnrollmentFormInputValues,
     unknown,
@@ -133,10 +148,65 @@ export function EnrollmentForm() {
     }
   };
 
-  const handleConfirmSubmit = form.handleSubmit(() => undefined);
+  const handleConfirmSubmit = form.handleSubmit((values) => {
+    setSubmitErrorMessage("");
+    const payload = toEnrollmentRequest(values);
+
+    enrollmentMutation.mutate(payload, {
+      onSuccess: () => {
+        setSubmittedValues(values);
+      },
+      onError: (error) => {
+        const message = getEnrollmentErrorMessage(error);
+        setSubmitErrorMessage(message);
+
+        if (isApiError(error) && error.code === "COURSE_FULL") {
+          form.setError("courseId", {
+            type: "server",
+            message,
+          });
+          setCurrentStep("course");
+          return;
+        }
+
+        if (isApiError(error) && error.code === "DUPLICATE_ENROLLMENT") {
+          form.setError("applicant.email", {
+            type: "server",
+            message,
+          });
+          setCurrentStep("applicant");
+          return;
+        }
+
+        const hasFieldErrors = applyInvalidInputFieldErrors(
+          error,
+          form.setError,
+        );
+
+        if (hasFieldErrors && isApiError(error)) {
+          const firstField = Object.keys(error.details ?? {})[0];
+
+          if (firstField?.startsWith("course") || firstField === "type") {
+            setCurrentStep("course");
+          } else if (firstField?.startsWith("applicant") || firstField?.startsWith("group")) {
+            setCurrentStep("applicant");
+          }
+        }
+      },
+    });
+  });
 
   const isFirstStep = getStepIndex(currentStep) === 0;
   const isLastStep = getStepIndex(currentStep) === ENROLLMENT_STEPS.length - 1;
+
+  if (enrollmentMutation.data && submittedValues) {
+    return (
+      <EnrollmentSuccess
+        enrollment={enrollmentMutation.data}
+        submittedValues={submittedValues}
+      />
+    );
+  }
 
   return (
     <FormProvider {...form}>
@@ -162,8 +232,10 @@ export function EnrollmentForm() {
         {currentStep === "applicant" && <ApplicantInfoStep />}
         {currentStep === "confirm" && (
           <ConfirmStep
+            isSubmitting={enrollmentMutation.isPending}
             onGoToStep={setCurrentStep}
             onSubmit={() => void handleConfirmSubmit()}
+            submitErrorMessage={submitErrorMessage}
           />
         )}
 

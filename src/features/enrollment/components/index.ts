@@ -4,4 +4,5 @@ export * from "./confirm-step";
 export * from "./course-card";
 export * from "./course-select-step";
 export * from "./enrollment-form";
+export * from "./enrollment-success";
 export * from "./step-indicator";

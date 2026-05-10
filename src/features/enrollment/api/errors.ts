@@ -35,6 +35,16 @@ export class ApiError extends Error {
   }
 }
 
+export class NetworkError extends Error {
+  constructor() {
+    super("네트워크 연결을 확인한 뒤 다시 시도해주세요.");
+    this.name = "NetworkError";
+  }
+}
+
+export type ApiRequestError = ApiError | NetworkError;
+export type EnrollmentMutationError = ApiRequestError;
+
 export function isKnownEnrollmentErrorCode(
   code: string,
 ): code is EnrollmentErrorCode {
@@ -43,6 +53,10 @@ export function isKnownEnrollmentErrorCode(
 
 export function isApiError(error: unknown): error is ApiError {
   return error instanceof ApiError;
+}
+
+export function isNetworkError(error: unknown): error is NetworkError {
+  return error instanceof NetworkError;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -74,4 +88,28 @@ export async function parseApiError(response: Response) {
   const payload: unknown = await response.json().catch(() => null);
 
   return new ApiError(response.status, parseErrorResponse(payload));
+}
+
+export function getEnrollmentErrorMessage(error: unknown) {
+  if (isNetworkError(error)) {
+    return error.message;
+  }
+
+  if (!isApiError(error)) {
+    return "알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+  }
+
+  if (error.code === "COURSE_FULL") {
+    return "선택한 강의의 정원이 마감되었습니다. 다른 강의를 선택해주세요.";
+  }
+
+  if (error.code === "DUPLICATE_ENROLLMENT") {
+    return "이미 신청된 강의입니다. 신청 정보를 다시 확인해주세요.";
+  }
+
+  if (error.code === "INVALID_INPUT") {
+    return "입력값을 확인해주세요. 표시된 항목을 수정한 뒤 다시 제출해주세요.";
+  }
+
+  return error.message;
 }

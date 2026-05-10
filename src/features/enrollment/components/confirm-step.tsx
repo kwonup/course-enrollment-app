@@ -11,8 +11,10 @@ import type { Course } from "@/features/enrollment/types";
 import { useCoursesQuery } from "@/features/enrollment/hooks";
 
 interface ConfirmStepProps {
+  isSubmitting: boolean;
   onGoToStep: (stepId: EnrollmentStepId) => void;
   onSubmit: () => void;
+  submitErrorMessage: string;
 }
 
 function formatPrice(price: number) {
@@ -88,7 +90,12 @@ function CourseSummary({ course }: { course?: Course }) {
   );
 }
 
-export function ConfirmStep({ onGoToStep, onSubmit }: ConfirmStepProps) {
+export function ConfirmStep({
+  isSubmitting,
+  onGoToStep,
+  onSubmit,
+  submitErrorMessage,
+}: ConfirmStepProps) {
   const {
     formState: { errors },
     register,
@@ -232,12 +239,18 @@ export function ConfirmStep({ onGoToStep, onSubmit }: ConfirmStepProps) {
       </section>
 
       <div className="flex justify-end">
+        {submitErrorMessage && (
+          <p className="mr-auto text-sm font-medium text-red-600">
+            {submitErrorMessage}
+          </p>
+        )}
         <button
           type="button"
           onClick={onSubmit}
-          className="inline-flex h-11 items-center justify-center rounded-md bg-slate-950 px-5 text-sm font-medium text-white transition hover:bg-slate-800"
+          disabled={isSubmitting}
+          className="inline-flex h-11 items-center justify-center rounded-md bg-slate-950 px-5 text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          수강 신청 제출
+          {isSubmitting ? "제출 중" : "수강 신청 제출"}
         </button>
       </div>
     </section>

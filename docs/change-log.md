@@ -360,6 +360,37 @@
 
 ### 변경 사항
 
+- 최종 제출 흐름을 완료해 `useEnrollmentMutation`, payload 변환, 성공 화면, 실패 에러 처리를 연결했다.
+- 제출 실패 시 폼 데이터를 유지하고, 재시도 가능한 상태로 남도록 했다.
+- 비즈니스 에러와 네트워크 에러 메시지를 구분하고, `INVALID_INPUT` details를 필드 에러로 반영했다.
+
+### 변경 이유
+
+- 수강 신청 플로우가 실제 Mock API 제출 성공/실패 응답까지 처리할 수 있어야 하므로 제출 흐름을 완성했다.
+
+### 영향 범위
+
+- `src/features/enrollment/components/enrollment-form.tsx`
+- `src/features/enrollment/components/confirm-step.tsx`
+- `src/features/enrollment/components/enrollment-success.tsx`
+- `src/features/enrollment/api/*`
+- `src/features/enrollment/hooks/*`
+- `src/features/enrollment/utils/*`
+- `docs/feature-checklist.md`
+
+### 검증 내용
+
+- `npm run build`로 TypeScript 타입 검사와 Next.js production build를 확인했다.
+
+### 남은 과제
+
+- 첫 번째 에러 필드 포커스 이동 보강
+- README 작성
+
+## 2026-05-10
+
+### 변경 사항
+
 - 단체 신청의 `담당자 연락처` 필드를 담당자 전화번호 입력 전용으로 수정했다.
 - `groupSchema.contactPerson`에 한국 전화번호 형식 검증을 추가했다.
 - MSW `POST /api/enrollments` handler의 단체 신청 검증도 담당자 전화번호 형식을 확인하도록 맞췄다.
@@ -380,9 +411,50 @@
 
 ### 남은 과제
 
-- 실제 제출 mutation 연결
-- 제출 payload 변환 함수 구현
-- 제출 성공/실패 UX 구현
+- 첫 번째 에러 필드 포커스 이동 보강
+- README 작성
+
+## 2026-05-10
+
+### 변경 사항
+
+- `useEnrollmentMutation`을 최종 제출 흐름에 연결했다.
+- 최종 제출 시 `handleSubmit`으로 전체 Zod schema 검증을 실행하고, 검증된 form 값을 API payload로 변환하도록 했다.
+- 개인 신청과 단체 신청 payload 변환 유틸을 `src/features/enrollment/utils/enrollment-payload.ts`에 추가했다.
+- 제출 성공 화면을 구현해 신청 번호, 신청 상태, 신청 일시, 강의 요약, 신청자 요약, 단체 신청 요약을 표시하도록 했다.
+- 제출 중에는 제출 버튼을 비활성화해 중복 제출을 방지했다.
+- 실패 시 폼 데이터를 초기화하지 않고 에러 메시지를 표시해 재시도할 수 있게 했다.
+- `COURSE_FULL`, `DUPLICATE_ENROLLMENT`, `INVALID_INPUT`, 네트워크 에러 메시지를 구분해 사용자 친화적인 한국어 메시지로 변환했다.
+- `INVALID_INPUT`의 `details`를 가능한 경우 React Hook Form field error로 반영하는 유틸을 추가했다.
+- 제출 관련 완료 항목을 `docs/feature-checklist.md`에 반영했다.
+
+### 변경 이유
+
+- UI 컴포넌트가 API payload 구조를 직접 알지 않도록 form 값에서 API 요청으로 변환하는 책임을 유틸로 분리했다.
+- 서버 비즈니스 에러와 네트워크 에러를 구분해야 사용자가 강의 재선택, 정보 수정, 재시도 중 무엇을 해야 하는지 이해할 수 있다.
+- `INVALID_INPUT`은 필드별 에러로 반영해야 사용자가 수정할 위치를 바로 찾을 수 있으므로 서버 `details`를 RHF `setError`에 연결했다.
+
+### 영향 범위
+
+- `src/features/enrollment/components/enrollment-form.tsx`
+- `src/features/enrollment/components/confirm-step.tsx`
+- `src/features/enrollment/components/enrollment-success.tsx`
+- `src/features/enrollment/api/errors.ts`
+- `src/features/enrollment/api/fetcher.ts`
+- `src/features/enrollment/hooks/use-enrollment-mutation.ts`
+- `src/features/enrollment/utils/enrollment-payload.ts`
+- `src/features/enrollment/utils/server-errors.ts`
+- `src/features/enrollment/utils/index.ts`
+- `docs/feature-checklist.md`
+
+### 검증 내용
+
+- `npm run build`로 TypeScript 타입 검사와 Next.js production build를 확인했다.
+
+### 남은 과제
+
+- 첫 번째 에러 필드 포커스 이동 보강
+- README 작성
 
 ## 2026-05-10
 

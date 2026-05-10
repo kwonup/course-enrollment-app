@@ -1,7 +1,7 @@
 // 강의 목록 조회를 TanStack Query로 감싼 query hook입니다.
 import { useQuery } from "@tanstack/react-query";
 import { fetchCourses } from "@/features/enrollment/api";
-import type { ApiError } from "@/features/enrollment/api";
+import type { ApiRequestError } from "@/features/enrollment/api";
 import type { CourseCategory } from "@/features/enrollment/constants";
 import type { CourseListResponse } from "@/features/enrollment/types";
 
@@ -16,7 +16,7 @@ interface UseCoursesQueryParams {
 }
 
 export function useCoursesQuery(params: UseCoursesQueryParams = {}) {
-  return useQuery<CourseListResponse, ApiError>({
+  return useQuery<CourseListResponse, ApiRequestError>({
     queryKey: coursesQueryKeys.list(params.category),
     queryFn: () => fetchCourses({ category: params.category }),
   });
