@@ -3,7 +3,12 @@
 // 수강 신청 멀티스텝 폼의 루트 컴포넌트로, RHF 상태와 스텝 이동을 관리합니다.
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { FormProvider, type FieldPath, useForm } from "react-hook-form";
+import {
+  FormProvider,
+  type FieldErrors,
+  type FieldPath,
+  useForm,
+} from "react-hook-form";
 import {
   getEnrollmentErrorMessage,
   isApiError,
@@ -70,6 +75,50 @@ function getPreviousStepId(currentStep: EnrollmentStepId) {
   return previousStep?.id;
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function collectErrorFieldPaths(value: unknown, prefix = ""): string[] {
+  if (!isRecord(value) && !Array.isArray(value)) {
+    return [];
+  }
+
+  if (isRecord(value) && typeof value.message === "string" && prefix) {
+    return [prefix];
+  }
+
+  const entries = Array.isArray(value)
+    ? value.map((item, index) => [String(index), item] as const)
+    : Object.entries(value).filter(
+        ([key]) => !["message", "ref", "type", "types"].includes(key),
+      );
+
+  return entries.flatMap(([key, child]) =>
+    collectErrorFieldPaths(child, prefix ? `${prefix}.${key}` : key),
+  );
+}
+
+function normalizeFocusableFieldPath(path: string) {
+  if (path === "group.participants") {
+    return "group.participants.0.name";
+  }
+
+  return path;
+}
+
+function getStepIdByFieldPath(path: string): EnrollmentStepId {
+  if (path === "courseId" || path === "type") {
+    return "course";
+  }
+
+  if (path === "agreedToTerms") {
+    return "confirm";
+  }
+
+  return "applicant";
+}
+
 export function EnrollmentForm() {
   const [submitErrorMessage, setSubmitErrorMessage] = useState("");
   const [submittedValues, setSubmittedValues] =
@@ -88,6 +137,28 @@ export function EnrollmentForm() {
 
   const currentStep = form.watch("currentStep");
   const selectedType = form.watch("type");
+
+  const focusField = (fieldPath: FieldPath<EnrollmentFormInputValues>) => {
+    window.setTimeout(() => {
+      form.setFocus(fieldPath);
+    }, 0);
+  };
+
+  const focusFirstError = (
+    errors: FieldErrors<EnrollmentFormInputValues>,
+  ) => {
+    const firstPath = collectErrorFieldPaths(errors)[0];
+
+    if (!firstPath) {
+      return;
+    }
+
+    const focusablePath = normalizeFocusableFieldPath(firstPath);
+    const fieldPath = focusablePath as FieldPath<EnrollmentFormInputValues>;
+
+    setCurrentStep(getStepIdByFieldPath(focusablePath));
+    focusField(fieldPath);
+  };
 
   const setCurrentStep = (stepId: EnrollmentStepId) => {
     const nextStepIndex = getStepIndex(stepId);
@@ -174,6 +245,7 @@ export function EnrollmentForm() {
             message,
           });
           setCurrentStep("course");
+          focusField("courseId");
           return;
         }
 
@@ -183,6 +255,7 @@ export function EnrollmentForm() {
             message,
           });
           setCurrentStep("applicant");
+          focusField("applicant.email");
           return;
         }
 
@@ -199,10 +272,18 @@ export function EnrollmentForm() {
           } else if (firstField?.startsWith("applicant") || firstField?.startsWith("group")) {
             setCurrentStep("applicant");
           }
+
+          if (firstField) {
+            focusField(
+              normalizeFocusableFieldPath(
+                firstField,
+              ) as FieldPath<EnrollmentFormInputValues>,
+            );
+          }
         }
       },
     });
-  });
+  }, focusFirstError);
 
   const isFirstStep = getStepIndex(currentStep) === 0;
   const isLastStep = getStepIndex(currentStep) === ENROLLMENT_STEPS.length - 1;
@@ -233,6 +314,7 @@ export function EnrollmentForm() {
 
         <StepIndicator
           currentStep={currentStep}
+          furthestStepIndex={furthestStepIndex}
           onStepClick={(stepId) => void goToStep(stepId)}
         />
 
@@ -242,22 +324,23 @@ export function EnrollmentForm() {
           <ConfirmStep
             isSubmitting={enrollmentMutation.isPending}
             onGoToStep={setCurrentStep}
+            onPrevious={goToPreviousStep}
             onSubmit={() => void handleConfirmSubmit()}
             submitErrorMessage={submitErrorMessage}
           />
         )}
 
-        <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
-          <button
-            type="button"
-            onClick={goToPreviousStep}
-            disabled={isFirstStep}
-            className="inline-flex h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            이전
-          </button>
+        {!isLastStep && (
+          <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
+            <button
+              type="button"
+              onClick={goToPreviousStep}
+              disabled={isFirstStep}
+              className="inline-flex h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              이전
+            </button>
 
-          {!isLastStep && (
             <button
               type="button"
               onClick={goToNextStep}
@@ -265,8 +348,8 @@ export function EnrollmentForm() {
             >
               다음
             </button>
-          )}
-        </div>
+          </div>
+        )}
       </form>
     </FormProvider>
   );

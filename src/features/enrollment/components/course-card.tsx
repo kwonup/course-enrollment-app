@@ -3,23 +3,12 @@
 // 강의 목록에서 하나의 강의를 표시하고 선택 상태, 정원 마감, 마감 임박 상태를 보여줍니다.
 import { COURSE_CATEGORY_LABELS } from "@/features/enrollment/constants";
 import type { Course } from "@/features/enrollment/types";
+import { formatCurrency, formatDateRange } from "@/features/enrollment/utils";
 
 interface CourseCardProps {
   course: Course;
   isSelected: boolean;
   onSelect: (course: Course) => void;
-}
-
-function formatPrice(price: number) {
-  return new Intl.NumberFormat("ko-KR", {
-    style: "currency",
-    currency: "KRW",
-    maximumFractionDigits: 0,
-  }).format(price);
-}
-
-function formatDateRange(startDate: string, endDate: string) {
-  return `${startDate} ~ ${endDate}`;
 }
 
 function getRemainingCapacity(course: Course) {
@@ -81,7 +70,7 @@ export function CourseCard({ course, isSelected, onSelect }: CourseCardProps) {
           <div className="flex justify-between gap-4">
             <dt>수강료</dt>
             <dd className="font-medium text-slate-800">
-              {formatPrice(course.price)}
+              {formatCurrency(course.price)}
             </dd>
           </div>
           <div className="flex justify-between gap-4">
@@ -102,7 +91,7 @@ export function CourseCard({ course, isSelected, onSelect }: CourseCardProps) {
           isSelected
             ? "bg-slate-950 text-white"
             : "border border-slate-300 bg-white text-slate-700 hover:bg-slate-100",
-          isFull ? "cursor-not-allowed opacity-60" : "",
+          isFull ? "cursor-not-allowed bg-slate-100 text-slate-400" : "",
         ].join(" ")}
       >
         {isFull ? "선택 불가" : isSelected ? "선택됨" : "선택"}

@@ -46,8 +46,12 @@ export function Providers({ children }: Readonly<{ children: ReactNode }>) {
       {isMockWorkerReady ? (
         children
       ) : (
-        <div className="flex min-h-screen items-center justify-center bg-slate-50 px-6 text-sm text-slate-600">
-          Mock API를 준비하고 있습니다.
+        <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-slate-50 px-6 text-sm text-slate-600">
+          <span
+            className="size-6 animate-spin rounded-full border-2 border-slate-300 border-t-slate-950"
+            aria-hidden="true"
+          />
+          <span>Mock API를 준비하고 있습니다.</span>
         </div>
       )}
     </QueryClientProvider>

@@ -16,6 +16,7 @@ import {
   useEnrollmentTypeSwitch,
 } from "@/features/enrollment/hooks";
 import { CourseCard } from "@/features/enrollment/components/course-card";
+import { formatCurrency } from "@/features/enrollment/utils";
 
 const enrollmentTypeOptions: Array<{
   value: EnrollmentType;
@@ -36,14 +37,6 @@ const enrollmentTypeOptions: Array<{
 
 function getRemainingCapacity(course: Course) {
   return Math.max(course.maxCapacity - course.currentEnrollment, 0);
-}
-
-function formatPrice(price: number) {
-  return new Intl.NumberFormat("ko-KR", {
-    style: "currency",
-    currency: "KRW",
-    maximumFractionDigits: 0,
-  }).format(price);
 }
 
 export function CourseSelectStep() {
@@ -132,12 +125,23 @@ export function CourseSelectStep() {
       </div>
 
       {coursesQuery.isLoading && (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2" aria-label="강의 목록 로딩 중">
           {Array.from({ length: 4 }).map((_, index) => (
             <div
               key={index}
-              className="h-72 animate-pulse rounded-md border border-slate-200 bg-white"
-            />
+              className="rounded-md border border-slate-200 bg-white p-5"
+            >
+              <div className="h-5 w-24 animate-pulse rounded bg-slate-200" />
+              <div className="mt-6 h-6 w-3/4 animate-pulse rounded bg-slate-200" />
+              <div className="mt-3 h-4 w-full animate-pulse rounded bg-slate-100" />
+              <div className="mt-2 h-4 w-5/6 animate-pulse rounded bg-slate-100" />
+              <div className="mt-8 grid gap-3">
+                <div className="h-4 animate-pulse rounded bg-slate-100" />
+                <div className="h-4 animate-pulse rounded bg-slate-100" />
+                <div className="h-4 animate-pulse rounded bg-slate-100" />
+              </div>
+              <div className="mt-6 h-10 animate-pulse rounded bg-slate-200" />
+            </div>
           ))}
         </div>
       )}
@@ -168,7 +172,8 @@ export function CourseSelectStep() {
             표시할 강의가 없습니다.
           </h3>
           <p className="mt-2 text-sm text-slate-600">
-            다른 카테고리를 선택해 강의를 확인해주세요.
+            현재 선택한 카테고리에 등록된 강의가 없습니다. 전체 또는 다른
+            카테고리를 선택해 다시 확인해주세요.
           </p>
         </div>
       )}
@@ -205,7 +210,7 @@ export function CourseSelectStep() {
             <div>
               <dt className="text-slate-500">수강료</dt>
               <dd className="mt-1 font-medium text-slate-950">
-                {formatPrice(selectedCourse.price)}
+                {formatCurrency(selectedCourse.price)}
               </dd>
             </div>
             <div>

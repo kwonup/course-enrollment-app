@@ -5,6 +5,7 @@ import { COURSE_CATEGORY_LABELS } from "@/features/enrollment/constants";
 import type { EnrollmentFormSchemaValues } from "@/features/enrollment/schemas";
 import type { Course, EnrollmentResponse } from "@/features/enrollment/types";
 import { useCoursesQuery } from "@/features/enrollment/hooks";
+import { formatDateRange, formatDateTime } from "@/features/enrollment/utils";
 
 interface EnrollmentSuccessProps {
   enrollment: EnrollmentResponse;
@@ -13,13 +14,6 @@ interface EnrollmentSuccessProps {
 
 function formatStatus(status: EnrollmentResponse["status"]) {
   return status === "confirmed" ? "신청 확정" : "신청 대기";
-}
-
-function formatDateTime(value: string) {
-  return new Intl.DateTimeFormat("ko-KR", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(new Date(value));
 }
 
 function CourseSummary({ course }: { course?: Course }) {
@@ -46,7 +40,7 @@ function CourseSummary({ course }: { course?: Course }) {
       <div>
         <dt className="text-slate-500">기간</dt>
         <dd className="mt-1 font-medium text-slate-950">
-          {course.startDate} ~ {course.endDate}
+          {formatDateRange(course.startDate, course.endDate)}
         </dd>
       </div>
     </dl>

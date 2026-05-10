@@ -9,20 +9,17 @@ import {
 import type { EnrollmentFormInputValues } from "@/features/enrollment/schemas";
 import type { Course } from "@/features/enrollment/types";
 import { useCoursesQuery } from "@/features/enrollment/hooks";
+import {
+  formatCurrency,
+  formatDateRange,
+} from "@/features/enrollment/utils";
 
 interface ConfirmStepProps {
   isSubmitting: boolean;
   onGoToStep: (stepId: EnrollmentStepId) => void;
+  onPrevious: () => void;
   onSubmit: () => void;
   submitErrorMessage: string;
-}
-
-function formatPrice(price: number) {
-  return new Intl.NumberFormat("ko-KR", {
-    style: "currency",
-    currency: "KRW",
-    maximumFractionDigits: 0,
-  }).format(price);
 }
 
 function SummarySection({
@@ -43,7 +40,7 @@ function SummarySection({
         <button
           type="button"
           onClick={() => onGoToStep(editStep)}
-          className="text-sm font-medium text-slate-700 underline-offset-4 hover:underline"
+          className="inline-flex h-8 items-center justify-center rounded-md border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
         >
           수정
         </button>
@@ -77,13 +74,13 @@ function CourseSummary({ course }: { course?: Course }) {
       <div>
         <dt className="text-slate-500">수강료</dt>
         <dd className="mt-1 font-medium text-slate-950">
-          {formatPrice(course.price)}
+          {formatCurrency(course.price)}
         </dd>
       </div>
       <div className="sm:col-span-2">
         <dt className="text-slate-500">기간</dt>
         <dd className="mt-1 font-medium text-slate-950">
-          {course.startDate} ~ {course.endDate}
+          {formatDateRange(course.startDate, course.endDate)}
         </dd>
       </div>
     </dl>
@@ -93,6 +90,7 @@ function CourseSummary({ course }: { course?: Course }) {
 export function ConfirmStep({
   isSubmitting,
   onGoToStep,
+  onPrevious,
   onSubmit,
   submitErrorMessage,
 }: ConfirmStepProps) {
@@ -238,20 +236,30 @@ export function ConfirmStep({
         </p>
       </section>
 
-      <div className="flex justify-end">
-        {submitErrorMessage && (
-          <p className="mr-auto text-sm font-medium text-red-600">
-            {submitErrorMessage}
-          </p>
-        )}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <button
           type="button"
-          onClick={onSubmit}
-          disabled={isSubmitting}
-          className="inline-flex h-11 items-center justify-center rounded-md bg-slate-950 px-5 text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+          onClick={onPrevious}
+          className="inline-flex h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
         >
-          {isSubmitting ? "제출 중" : "수강 신청 제출"}
+          이전
         </button>
+
+        <div className="flex flex-col gap-3 sm:ml-auto sm:flex-row sm:items-center">
+          {submitErrorMessage && (
+            <p className="text-sm font-medium text-red-600">
+              {submitErrorMessage}
+            </p>
+          )}
+          <button
+            type="button"
+            onClick={onSubmit}
+            disabled={isSubmitting}
+            className="inline-flex h-11 items-center justify-center rounded-md bg-slate-950 px-5 text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {isSubmitting ? "제출 중" : "수강 신청 제출"}
+          </button>
+        </div>
       </div>
     </section>
   );

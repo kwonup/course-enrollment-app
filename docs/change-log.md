@@ -360,6 +360,39 @@
 
 ### 변경 사항
 
+- 스텝 인디케이터에서 `현재`, `완료`, `다음`, `잠김` 상태 텍스트를 제거했다.
+- 스텝 인디케이터의 시각적 잠김 처리와 disabled 처리를 제거하고, 이동 가능 여부 판단은 기존 루트 폼 검증 로직에 맡기도록 정리했다.
+- 확인 및 제출 단계의 `수정` 버튼을 테두리와 배경이 있는 버튼 형태로 변경했다.
+- 확인 및 제출 단계의 `수강 신청 제출` 버튼이 데스크톱 레이아웃에서 우측 끝에 배치되도록 조정했다.
+- 확인 및 제출 단계의 `이전` 버튼을 공통 하단 내비게이션에서 단계 내부 액션 영역으로 옮겨 제출 버튼과 같은 높이에 배치했다.
+- 전역 CSS에 활성 버튼 hover 시 손가락 커서가 표시되도록 기본 cursor 규칙을 추가했다.
+
+### 변경 이유
+
+- 인디케이터의 상태 텍스트와 잠김 표현이 현재 흐름에서는 과하게 느껴져, 단계 제목과 숫자/체크 표시만 남겨 더 간결하게 보이도록 했다.
+- 다음 단계 이동 제한은 UI disabled가 아니라 `EnrollmentForm`의 단계 이동 검증이 담당하므로, 표시 방식 변경과 검증 로직을 분리했다.
+- 확인 화면의 수정 액션은 중요한 편집 동선이므로 링크처럼 보이기보다 명확한 버튼으로 인식되게 했다.
+- 확인 단계에서는 이전/제출이 한 묶음의 하단 액션이므로, 공통 내비게이션과 분리하지 않고 같은 영역에서 좌우 정렬되도록 했다.
+
+### 영향 범위
+
+- `src/features/enrollment/components/step-indicator.tsx`
+- `src/features/enrollment/components/confirm-step.tsx`
+- `src/features/enrollment/components/enrollment-form.tsx`
+- `src/styles/globals.css`
+
+### 검증 내용
+
+- `npm run build`로 TypeScript 타입 검사와 Next.js production build를 확인했다.
+
+### 남은 과제
+
+- 실제 브라우저에서 모바일/데스크톱 간격과 클릭 동선 최종 점검
+
+## 2026-05-10
+
+### 변경 사항
+
 - 최종 제출 흐름을 완료해 `useEnrollmentMutation`, payload 변환, 성공 화면, 실패 에러 처리를 연결했다.
 - 제출 실패 시 폼 데이터를 유지하고, 재시도 가능한 상태로 남도록 했다.
 - 비즈니스 에러와 네트워크 에러 메시지를 구분하고, `INVALID_INPUT` details를 필드 에러로 반영했다.
@@ -386,6 +419,45 @@
 
 - 첫 번째 에러 필드 포커스 이동 보강
 - README 작성
+
+## 2026-05-10
+
+### 변경 사항
+
+- 스텝 인디케이터에 현재/완료/다음/잠김 상태 라벨을 추가하고, 아직 이동할 수 없는 미래 스텝은 비활성 상태로 표시했다.
+- 최종 제출 검증 실패와 서버 필드 에러 발생 시 첫 번째 에러 필드가 있는 스텝으로 이동한 뒤 해당 필드에 포커스하도록 보강했다.
+- 강의 카드, 확인 화면, 완료 화면의 날짜/가격 표시를 공통 포맷터로 통일했다.
+- 강의 목록 로딩 skeleton을 실제 카드 구조와 비슷하게 정리하고, Mock API 준비 화면에 spinner를 추가했다.
+- 빈 상태 안내 문구와 제출 에러/버튼 배치를 모바일에서 읽기 쉽게 조정했다.
+- UX 개선 및 제출 상태 처리 완료 항목을 `docs/feature-checklist.md`에 반영했다.
+
+### 변경 이유
+
+- 사용자가 어느 단계에 있고 어떤 단계로 이동할 수 있는지 명확하게 보여주고, 검증 실패 시 수정해야 할 필드로 바로 이동할 수 있게 하기 위함이다.
+- 날짜/가격 포맷을 컴포넌트마다 따로 구현하면 표시 방식이 달라질 수 있어 공통 유틸로 통일했다.
+- 로딩/빈 상태/disabled 상태는 과한 장식보다 현재 상태와 다음 행동을 명확히 전달하도록 정리했다.
+
+### 영향 범위
+
+- `src/features/enrollment/components/enrollment-form.tsx`
+- `src/features/enrollment/components/step-indicator.tsx`
+- `src/features/enrollment/components/course-select-step.tsx`
+- `src/features/enrollment/components/course-card.tsx`
+- `src/features/enrollment/components/confirm-step.tsx`
+- `src/features/enrollment/components/enrollment-success.tsx`
+- `src/features/enrollment/utils/formatters.ts`
+- `src/features/enrollment/utils/index.ts`
+- `src/app/providers.tsx`
+- `docs/feature-checklist.md`
+
+### 검증 내용
+
+- `npm run build`로 TypeScript 타입 검사와 Next.js production build를 확인했다.
+
+### 남은 과제
+
+- README 작성
+- 최종 수동 플로우 점검
 
 ## 2026-05-10
 

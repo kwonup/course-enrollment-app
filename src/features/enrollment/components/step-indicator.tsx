@@ -6,22 +6,20 @@ import type { EnrollmentStepId } from "@/features/enrollment/constants";
 
 interface StepIndicatorProps {
   currentStep: EnrollmentStepId;
+  furthestStepIndex: number;
   onStepClick: (stepId: EnrollmentStepId) => void;
 }
 
 export function StepIndicator({
   currentStep,
+  furthestStepIndex,
   onStepClick,
 }: StepIndicatorProps) {
-  const currentIndex = ENROLLMENT_STEPS.findIndex(
-    (step) => step.id === currentStep,
-  );
-
   return (
     <ol className="grid gap-3 sm:grid-cols-3" aria-label="수강 신청 단계">
       {ENROLLMENT_STEPS.map((step, index) => {
         const isCurrent = step.id === currentStep;
-        const isCompleted = index < currentIndex;
+        const isCompleted = !isCurrent && index < furthestStepIndex;
 
         return (
           <li key={step.id}>
@@ -29,12 +27,15 @@ export function StepIndicator({
               type="button"
               onClick={() => onStepClick(step.id)}
               className={[
-                "flex w-full items-center gap-3 rounded-md border px-4 py-3 text-left text-sm transition",
+                "flex w-full items-center gap-3 rounded-md border px-4 py-3 text-left text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950/20",
                 isCurrent
                   ? "border-slate-950 bg-slate-950 text-white"
-                  : "border-slate-200 bg-white text-slate-700 hover:border-slate-400",
+                  : isCompleted
+                    ? "border-slate-300 bg-white text-slate-800 hover:border-slate-500"
+                    : "border-slate-200 bg-white text-slate-700 hover:border-slate-400",
               ].join(" ")}
               aria-current={isCurrent ? "step" : undefined}
+              aria-label={isCurrent ? `${step.title}, 현재 단계` : step.title}
             >
               <span
                 className={[
@@ -46,9 +47,11 @@ export function StepIndicator({
                       : "border-slate-300 text-slate-500",
                 ].join(" ")}
               >
-                {index + 1}
+                {isCompleted ? "✓" : index + 1}
               </span>
-              <span className="font-medium">{step.title}</span>
+              <span className="min-w-0">
+                <span className="block font-medium">{step.title}</span>
+              </span>
             </button>
           </li>
         );
