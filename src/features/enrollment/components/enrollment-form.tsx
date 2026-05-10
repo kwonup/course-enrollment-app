@@ -74,6 +74,7 @@ export function EnrollmentForm() {
   const [submitErrorMessage, setSubmitErrorMessage] = useState("");
   const [submittedValues, setSubmittedValues] =
     useState<EnrollmentFormSchemaValues | null>(null);
+  const [furthestStepIndex, setFurthestStepIndex] = useState(0);
   const enrollmentMutation = useEnrollmentMutation();
   const form = useForm<
     EnrollmentFormInputValues,
@@ -89,11 +90,16 @@ export function EnrollmentForm() {
   const selectedType = form.watch("type");
 
   const setCurrentStep = (stepId: EnrollmentStepId) => {
+    const nextStepIndex = getStepIndex(stepId);
+
     form.setValue("currentStep", stepId, {
       shouldDirty: false,
       shouldTouch: false,
       shouldValidate: false,
     });
+    setFurthestStepIndex((currentIndex) =>
+      Math.max(currentIndex, nextStepIndex),
+    );
   };
 
   const goToStep = async (stepId: EnrollmentStepId) => {
@@ -105,7 +111,9 @@ export function EnrollmentForm() {
       return;
     }
 
-    if (targetStepIndex > currentStepIndex + 1) {
+    const isVisitedStep = targetStepIndex <= furthestStepIndex;
+
+    if (!isVisitedStep && targetStepIndex > currentStepIndex + 1) {
       return;
     }
 
