@@ -25,7 +25,6 @@
 - React Hook Form
 - Zod
 - TanStack Query
-- shadcn/ui
 - MSW
 - Tailwind CSS
 

@@ -163,7 +163,6 @@ NEXT_PUBLIC_API_MOCKING=disabled npm run dev
 
 ## 미구현 / 제약사항
 
-- shadcn/ui 패키지는 별도로 설치하지 않았습니다. 현재 UI는 Tailwind CSS 유틸리티 클래스로 구현했습니다.
 - 실제 백엔드 API route는 구현하지 않았습니다. 과제 범위에서는 MSW 기반 mock API로 서버 응답을 재현합니다.
 - 네트워크 실패를 강제로 발생시키는 별도 UI나 query parameter는 없습니다. 일반 fetch 실패와 비즈니스 에러 메시지 구분 로직은 구현되어 있습니다.
 - 브라우저 뒤로가기 시 커스텀 확인 처리는 구현하지 않았습니다. 새로고침/닫기는 `beforeunload` 기본 확인창으로 처리합니다.

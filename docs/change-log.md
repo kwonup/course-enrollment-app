@@ -67,7 +67,7 @@
 
 ### 남은 과제
 
-- React Hook Form, Zod, shadcn/ui 연결
+- React Hook Form, Zod 연결
 - 수강 신청 도메인 타입, 스키마, API, Mock API 구현
 
 ## 2026-05-07

@@ -5,7 +5,6 @@
 - [x] Next.js App Router 프로젝트 생성
 - [x] TypeScript 설정
 - [x] Tailwind CSS 설정
-- [ ] shadcn/ui 설정
 - [x] React Hook Form 설치
 - [x] Zod 설치
 - [x] `@hookform/resolvers` 설치
