@@ -32,6 +32,7 @@ import { StepIndicator } from "@/features/enrollment/components/step-indicator";
 import {
   useEnrollmentDraft,
   useEnrollmentMutation,
+  usePreventUnsavedChanges,
 } from "@/features/enrollment/hooks";
 import {
   applyInvalidInputFieldErrors,
@@ -141,6 +142,7 @@ export function EnrollmentForm() {
 
   const currentStep = form.watch("currentStep");
   const selectedType = form.watch("type");
+  const isFormDirty = form.formState.isDirty;
   const {
     clearDraft,
     discardDraft,
@@ -150,6 +152,9 @@ export function EnrollmentForm() {
     form,
     furthestStepIndex,
     setFurthestStepIndex,
+  });
+  usePreventUnsavedChanges({
+    enabled: isFormDirty && !submittedValues && !enrollmentMutation.data,
   });
 
   const focusField = (fieldPath: FieldPath<EnrollmentFormInputValues>) => {

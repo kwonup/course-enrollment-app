@@ -360,6 +360,38 @@
 
 ### 변경 사항
 
+- React Hook Form의 `formState.isDirty`를 기준으로 입력 중인 폼이 있는지 감지하도록 했다.
+- 브라우저 새로고침/닫기 시 기본 확인 대화상자가 표시되도록 `beforeunload` hook을 추가했다.
+- 신청 완료 후 성공 화면으로 전환되면 이탈 방지 hook이 비활성화되도록 조건을 구성했다.
+- 아무 입력도 하지 않은 초기 상태나 복구 안내만 표시된 상태에서는 불필요한 경고가 뜨지 않도록 했다.
+- 브라우저 이탈 방지 완료 항목을 `docs/feature-checklist.md`에 반영했다.
+
+### 변경 이유
+
+- 작성 중인 신청 정보가 새로고침이나 탭 닫기로 사라지는 것을 한 번 더 방지하기 위함이다.
+- 브라우저의 `beforeunload` 정책상 커스텀 문구를 보장할 수 없으므로, 기본 확인창을 띄우는 최소 구현으로 처리했다.
+- 완료 화면에서는 더 이상 작성 중인 폼이 아니므로 경고를 띄우지 않는 것이 자연스럽다.
+
+### 영향 범위
+
+- `src/features/enrollment/components/enrollment-form.tsx`
+- `src/features/enrollment/hooks/use-prevent-unsaved-changes.ts`
+- `src/features/enrollment/hooks/index.ts`
+- `docs/feature-checklist.md`
+
+### 검증 내용
+
+- `npm run build`로 TypeScript 타입 검사와 Next.js production build를 확인했다.
+
+### 남은 과제
+
+- 뒤로가기 시 확인 처리
+- 실제 브라우저에서 새로고침/닫기 확인창 수동 점검
+
+## 2026-05-10
+
+### 변경 사항
+
 - 수강 신청 폼 입력값을 `localStorage`에 draft 전용 key로 임시 저장하도록 구현했다.
 - 폼 값 변경 감지는 React Hook Form의 `watch`를 사용하고, 600ms debounce를 적용해 입력마다 즉시 저장하지 않도록 했다.
 - 새로고침 후 저장된 draft가 있으면 복구 여부를 묻는 안내 UI를 표시하도록 했다.
