@@ -23,7 +23,12 @@ const stepValidationFields: Record<
   FieldPath<EnrollmentFormInputValues>[]
 > = {
   course: ["courseId", "type"],
-  applicant: ["applicant"],
+  applicant: [
+    "applicant.name",
+    "applicant.email",
+    "applicant.phone",
+    "applicant.motivation",
+  ],
   confirm: ["agreedToTerms"],
 };
 

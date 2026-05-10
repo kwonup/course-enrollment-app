@@ -284,3 +284,35 @@
 - 2단계 신청자 정보 입력 UI 구현
 - 단체 신청 조건부 필드 구현
 - 최종 확인 및 제출 UI 구현
+
+## 2026-05-10
+
+### 변경 사항
+
+- 2단계 `ApplicantInfoStep`에 이름, 이메일, 전화번호, 수강 동기 공통 입력 필드를 구현했다.
+- 각 필드를 React Hook Form `register`로 연결하고 Zod schema 기반 에러 메시지를 필드 아래에 표시하도록 했다.
+- `mode: "onBlur"` 설정을 활용해 blur 시 개별 필드 검증이 실행되도록 구성했다.
+- 다음 단계 이동 시 검증 대상을 `applicant` 전체 객체에서 `applicant.name`, `applicant.email`, `applicant.phone`, `applicant.motivation` 개별 필드로 좁혔다.
+- 2단계 공통 필드 완료 항목을 `docs/feature-checklist.md`에 반영했다.
+
+### 변경 이유
+
+- 단체 신청 추가 필드는 다음 단계에서 구현할 예정이므로 이번 단계에서는 개인/단체 신청 모두에 필요한 공통 신청자 정보만 구현했다.
+- 입력값은 React Hook Form의 단일 폼 상태 안에 저장되므로 이전 단계로 돌아갔다가 다시 2단계로 와도 값이 유지된다.
+- 필드별 에러와 `aria-invalid`, `aria-describedby`를 함께 연결해 사용자가 어떤 값을 수정해야 하는지 바로 알 수 있게 했다.
+
+### 영향 범위
+
+- `src/features/enrollment/components/applicant-info-step.tsx`
+- `src/features/enrollment/components/enrollment-form.tsx`
+- `docs/feature-checklist.md`
+
+### 검증 내용
+
+- `npm run build`로 TypeScript 타입 검사와 Next.js production build를 확인했다.
+
+### 남은 과제
+
+- 단체 신청 조건부 필드 구현
+- 최종 확인 및 제출 UI 구현
+- 서버 에러를 React Hook Form field error로 반영하는 로직 구현
