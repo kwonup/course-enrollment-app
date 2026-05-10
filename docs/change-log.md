@@ -360,6 +360,31 @@
 
 ### 변경 사항
 
+- 강의 목록 query의 `staleTime`을 `Infinity`로 설정해 한 번 불러온 mock 강의 데이터를 자동 stale 처리하지 않도록 했다.
+- 강의 목록 query의 `refetchOnMount`, `refetchOnReconnect`, `refetchOnWindowFocus`를 비활성화했다.
+
+### 변경 이유
+
+- 강의 목록은 현재 MSW 기반 정적 mock 데이터이므로 사용자가 1단계에 오래 머무르는 동안 자동 재조회할 필요가 없다.
+- 오래 방치한 뒤 브라우저 포커스/재연결로 자동 refetch가 발생할 때, 개발 환경의 service worker 상태에 따라 `/api/courses` 요청이 실제 Next 서버로 빠지면 mock endpoint가 없어 오류 화면이 표시될 수 있었다.
+- 새로고침하면 MSW가 다시 초기화되어 정상 표시되던 증상과 맞는 문제이므로, 불필요한 자동 refetch를 막아 1단계 화면 안정성을 높였다.
+
+### 영향 범위
+
+- `src/features/enrollment/hooks/use-courses-query.ts`
+
+### 검증 내용
+
+- `npm run build`로 TypeScript 타입 검사와 Next.js production build를 확인했다.
+
+### 남은 과제
+
+- 개발 서버에서 장시간 대기 후 강의 목록이 자동 에러 상태로 전환되지 않는지 수동 점검
+
+## 2026-05-10
+
+### 변경 사항
+
 - 평가자가 로컬에서 실행하고 구현 범위를 파악할 수 있도록 `README.md`를 새로 작성했다.
 - README에 프로젝트 개요, 기술 스택, 실행 방법, 프로젝트 구조, 요구사항 해석, 설계 결정, Mock API 사용 방법을 정리했다.
 - README에 실제 미구현/제약사항과 AI 활용 범위를 과장 없이 구분해 기록했다.

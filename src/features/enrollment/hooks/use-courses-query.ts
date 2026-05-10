@@ -19,5 +19,9 @@ export function useCoursesQuery(params: UseCoursesQueryParams = {}) {
   return useQuery<CourseListResponse, ApiRequestError>({
     queryKey: coursesQueryKeys.list(params.category),
     queryFn: () => fetchCourses({ category: params.category }),
+    staleTime: Infinity,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
   });
 }
