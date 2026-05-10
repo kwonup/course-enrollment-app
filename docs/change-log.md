@@ -360,6 +360,40 @@
 
 ### 변경 사항
 
+- 수강 신청 폼 입력값을 `localStorage`에 draft 전용 key로 임시 저장하도록 구현했다.
+- 폼 값 변경 감지는 React Hook Form의 `watch`를 사용하고, 600ms debounce를 적용해 입력마다 즉시 저장하지 않도록 했다.
+- 새로고침 후 저장된 draft가 있으면 복구 여부를 묻는 안내 UI를 표시하도록 했다.
+- `복구하기` 선택 시 저장된 폼 값과 도달했던 스텝 정보를 복원하고, `새로 작성` 선택 시 저장된 draft를 삭제하도록 했다.
+- 신청 성공 시 서버 응답과 별개로 브라우저에 남아 있는 임시 저장 데이터를 삭제하도록 했다.
+- 임시 저장 관련 완료 항목을 `docs/feature-checklist.md`에 반영했다.
+
+### 변경 이유
+
+- 새로고침이나 브라우저 종료 후에도 사용자가 입력하던 내용을 이어서 작성할 수 있게 하기 위함이다.
+- 서버 제출 결과와 브라우저 임시 저장 데이터가 섞이지 않도록 `kind`, `version`, `savedAt`, `values`를 가진 draft 전용 저장 포맷을 사용했다.
+- 복구 여부를 사용자가 직접 선택하기 전까지는 자동 저장을 시작하지 않아, 기존 draft가 기본 폼 값으로 덮어써지는 상황을 방지했다.
+
+### 영향 범위
+
+- `src/features/enrollment/components/enrollment-form.tsx`
+- `src/features/enrollment/hooks/use-enrollment-draft.ts`
+- `src/features/enrollment/hooks/index.ts`
+- `src/features/enrollment/utils/enrollment-draft-storage.ts`
+- `src/features/enrollment/utils/index.ts`
+- `docs/feature-checklist.md`
+
+### 검증 내용
+
+- `npm run build`로 TypeScript 타입 검사와 Next.js production build를 확인했다.
+
+### 남은 과제
+
+- 실제 브라우저에서 새로고침 후 복구 선택, 새로 작성 선택, 제출 성공 후 storage 삭제 흐름 수동 점검
+
+## 2026-05-10
+
+### 변경 사항
+
 - 스텝 인디케이터에서 `현재`, `완료`, `다음`, `잠김` 상태 텍스트를 제거했다.
 - 스텝 인디케이터의 시각적 잠김 처리와 disabled 처리를 제거하고, 이동 가능 여부 판단은 기존 루트 폼 검증 로직에 맡기도록 정리했다.
 - 확인 및 제출 단계의 `수정` 버튼을 테두리와 배경이 있는 버튼 형태로 변경했다.

@@ -29,9 +29,13 @@ import { ConfirmStep } from "@/features/enrollment/components/confirm-step";
 import { CourseSelectStep } from "@/features/enrollment/components/course-select-step";
 import { EnrollmentSuccess } from "@/features/enrollment/components/enrollment-success";
 import { StepIndicator } from "@/features/enrollment/components/step-indicator";
-import { useEnrollmentMutation } from "@/features/enrollment/hooks";
+import {
+  useEnrollmentDraft,
+  useEnrollmentMutation,
+} from "@/features/enrollment/hooks";
 import {
   applyInvalidInputFieldErrors,
+  formatDateTime,
   toEnrollmentRequest,
 } from "@/features/enrollment/utils";
 
@@ -137,6 +141,16 @@ export function EnrollmentForm() {
 
   const currentStep = form.watch("currentStep");
   const selectedType = form.watch("type");
+  const {
+    clearDraft,
+    discardDraft,
+    recoverableDraft,
+    restoreDraft,
+  } = useEnrollmentDraft({
+    form,
+    furthestStepIndex,
+    setFurthestStepIndex,
+  });
 
   const focusField = (fieldPath: FieldPath<EnrollmentFormInputValues>) => {
     window.setTimeout(() => {
@@ -233,6 +247,7 @@ export function EnrollmentForm() {
 
     enrollmentMutation.mutate(payload, {
       onSuccess: () => {
+        clearDraft();
         setSubmittedValues(values);
       },
       onError: (error) => {
@@ -317,6 +332,38 @@ export function EnrollmentForm() {
           furthestStepIndex={furthestStepIndex}
           onStepClick={(stepId) => void goToStep(stepId)}
         />
+
+        {recoverableDraft && (
+          <section className="rounded-md border border-amber-200 bg-amber-50 p-5">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 className="text-base font-semibold text-amber-950">
+                  임시 저장된 신청서가 있습니다.
+                </h2>
+                <p className="mt-1 text-sm leading-6 text-amber-800">
+                  {formatDateTime(recoverableDraft.savedAt)}에 저장된 입력
+                  내용을 복구할 수 있습니다.
+                </p>
+              </div>
+              <div className="flex flex-col-reverse gap-2 sm:flex-row">
+                <button
+                  type="button"
+                  onClick={discardDraft}
+                  className="inline-flex h-10 items-center justify-center rounded-md border border-amber-300 bg-white px-4 text-sm font-medium text-amber-900 transition hover:bg-amber-100"
+                >
+                  새로 작성
+                </button>
+                <button
+                  type="button"
+                  onClick={restoreDraft}
+                  className="inline-flex h-10 items-center justify-center rounded-md bg-amber-900 px-4 text-sm font-medium text-white transition hover:bg-amber-950"
+                >
+                  복구하기
+                </button>
+              </div>
+            </div>
+          </section>
+        )}
 
         {currentStep === "course" && <CourseSelectStep />}
         {currentStep === "applicant" && <ApplicantInfoStep />}
