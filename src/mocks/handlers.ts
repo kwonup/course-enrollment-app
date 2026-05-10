@@ -4,6 +4,7 @@ import {
   COURSE_CATEGORIES,
   type CourseCategory,
 } from "@/features/enrollment/constants";
+import { KOREAN_PHONE_NUMBER_REGEX } from "@/features/enrollment/schemas";
 import type {
   CourseListResponse,
   EnrollmentRequest,
@@ -102,6 +103,9 @@ function hasValidGroup(
 
   if (!isNonEmptyString(value.contactPerson)) {
     details["group.contactPerson"] = "담당자 연락처를 입력해주세요.";
+  } else if (!KOREAN_PHONE_NUMBER_REGEX.test(value.contactPerson)) {
+    details["group.contactPerson"] =
+      "올바른 담당자 전화번호를 입력해주세요.";
   }
 
   if (!Array.isArray(value.participants)) {
@@ -146,7 +150,8 @@ function hasValidGroup(
         isNonEmptyString(participant.name) &&
         isNonEmptyString(participant.email),
     ) &&
-    isNonEmptyString(value.contactPerson)
+    isNonEmptyString(value.contactPerson) &&
+    KOREAN_PHONE_NUMBER_REGEX.test(value.contactPerson)
   );
 }
 

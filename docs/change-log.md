@@ -360,6 +360,69 @@
 
 ### 변경 사항
 
+- 단체 신청의 `담당자 연락처` 필드를 담당자 전화번호 입력 전용으로 수정했다.
+- `groupSchema.contactPerson`에 한국 전화번호 형식 검증을 추가했다.
+- MSW `POST /api/enrollments` handler의 단체 신청 검증도 담당자 전화번호 형식을 확인하도록 맞췄다.
+
+### 변경 이유
+
+- 담당자 연락처가 이름 또는 연락처처럼 해석되지 않도록 입력 의도를 전화번호로 명확히 하고, 클라이언트/Mock API 검증 기준을 일치시키기 위함이다.
+
+### 영향 범위
+
+- `src/features/enrollment/components/applicant-info-step.tsx`
+- `src/features/enrollment/schemas/group-schema.ts`
+- `src/mocks/handlers.ts`
+
+### 검증 내용
+
+- `npm run build`로 TypeScript 타입 검사와 Next.js production build를 확인했다.
+
+### 남은 과제
+
+- 실제 제출 mutation 연결
+- 제출 payload 변환 함수 구현
+- 제출 성공/실패 UX 구현
+
+## 2026-05-10
+
+### 변경 사항
+
+- 3단계 `ConfirmStep`에 선택한 강의, 신청 유형, 신청자 정보, 수강 동기 요약을 추가했다.
+- 단체 신청인 경우 단체 정보와 참가자 명단 요약을 표시하도록 구현했다.
+- 각 요약 섹션에 수정 버튼을 추가하고, 클릭 시 해당 스텝으로 이동하도록 연결했다.
+- 이용약관 동의 체크박스와 필드 에러 메시지를 추가했다.
+- 제출 버튼 UI를 추가하고, 실제 mutation 없이 `handleSubmit`으로 전체 Zod schema 검증만 실행하도록 연결했다.
+- 확인 단계에서는 하단 `다음` 버튼을 숨겨 제출 버튼과 동작이 겹치지 않도록 했다.
+- 3단계 확인 및 제출 관련 완료 항목을 `docs/feature-checklist.md`에 반영했다.
+
+### 변경 이유
+
+- 최종 제출 전 사용자가 입력한 정보를 섹션 단위로 검토하고 필요한 스텝으로 바로 돌아가 수정할 수 있게 하기 위함이다.
+- 수정 링크는 기존 RHF 폼 상태를 유지한 채 `currentStep`만 변경하므로 입력 데이터가 사라지지 않는다.
+- 약관 동의는 전체 form schema의 일부로 검증해 최종 제출 전에 반드시 통과해야 하는 조건으로 유지했다.
+
+### 영향 범위
+
+- `src/features/enrollment/components/confirm-step.tsx`
+- `src/features/enrollment/components/enrollment-form.tsx`
+- `docs/feature-checklist.md`
+
+### 검증 내용
+
+- `npm run build`로 TypeScript 타입 검사와 Next.js production build를 확인했다.
+
+### 남은 과제
+
+- 실제 제출 mutation 연결
+- 제출 payload 변환 함수 구현
+- 제출 성공/실패 UX 구현
+- 서버 에러를 React Hook Form field error로 반영하는 로직 구현
+
+## 2026-05-10
+
+### 변경 사항
+
 - 단체 신청 참가자 이름/이메일 필드 하단의 에러 메시지 영역을 항상 렌더링하도록 수정했다.
 - 참가자 명단 전체 에러 메시지 영역에도 기본 높이를 부여했다.
 

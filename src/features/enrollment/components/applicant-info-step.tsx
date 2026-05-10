@@ -396,8 +396,10 @@ export function ApplicantInfoStep() {
               </label>
               <input
                 id="group-contact-person"
-                type="text"
-                placeholder="담당자 이름 또는 연락처"
+                type="tel"
+                autoComplete="tel"
+                inputMode="tel"
+                placeholder="010-1234-5678"
                 aria-invalid={
                   groupErrors.group?.contactPerson ? "true" : "false"
                 }

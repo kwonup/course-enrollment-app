@@ -108,6 +108,8 @@ export function EnrollmentForm() {
     }
   };
 
+  const handleConfirmSubmit = form.handleSubmit(() => undefined);
+
   const isFirstStep = getStepIndex(currentStep) === 0;
   const isLastStep = getStepIndex(currentStep) === ENROLLMENT_STEPS.length - 1;
 
@@ -130,7 +132,12 @@ export function EnrollmentForm() {
 
         {currentStep === "course" && <CourseSelectStep />}
         {currentStep === "applicant" && <ApplicantInfoStep />}
-        {currentStep === "confirm" && <ConfirmStep />}
+        {currentStep === "confirm" && (
+          <ConfirmStep
+            onGoToStep={goToStep}
+            onSubmit={() => void handleConfirmSubmit()}
+          />
+        )}
 
         <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
           <button
@@ -142,14 +149,15 @@ export function EnrollmentForm() {
             이전
           </button>
 
-          <button
-            type="button"
-            onClick={goToNextStep}
-            disabled={isLastStep}
-            className="inline-flex h-10 items-center justify-center rounded-md bg-slate-950 px-4 text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            다음
-          </button>
+          {!isLastStep && (
+            <button
+              type="button"
+              onClick={goToNextStep}
+              className="inline-flex h-10 items-center justify-center rounded-md bg-slate-950 px-4 text-sm font-medium text-white transition hover:bg-slate-800"
+            >
+              다음
+            </button>
+          )}
         </div>
       </form>
     </FormProvider>
