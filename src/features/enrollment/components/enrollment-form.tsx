@@ -73,12 +73,37 @@ export function EnrollmentForm() {
   const currentStep = form.watch("currentStep");
   const selectedType = form.watch("type");
 
-  const goToStep = (stepId: EnrollmentStepId) => {
+  const setCurrentStep = (stepId: EnrollmentStepId) => {
     form.setValue("currentStep", stepId, {
       shouldDirty: false,
       shouldTouch: false,
       shouldValidate: false,
     });
+  };
+
+  const goToStep = async (stepId: EnrollmentStepId) => {
+    const currentStepIndex = getStepIndex(currentStep);
+    const targetStepIndex = getStepIndex(stepId);
+
+    if (targetStepIndex <= currentStepIndex) {
+      setCurrentStep(stepId);
+      return;
+    }
+
+    if (targetStepIndex > currentStepIndex + 1) {
+      return;
+    }
+
+    const isCurrentStepValid = await form.trigger(
+      getStepValidationFields(currentStep, selectedType),
+      {
+        shouldFocus: true,
+      },
+    );
+
+    if (isCurrentStepValid) {
+      setCurrentStep(stepId);
+    }
   };
 
   const goToNextStep = async () => {
@@ -96,7 +121,7 @@ export function EnrollmentForm() {
     const nextStepId = getNextStepId(currentStep);
 
     if (nextStepId) {
-      goToStep(nextStepId);
+      setCurrentStep(nextStepId);
     }
   };
 
@@ -104,7 +129,7 @@ export function EnrollmentForm() {
     const previousStepId = getPreviousStepId(currentStep);
 
     if (previousStepId) {
-      goToStep(previousStepId);
+      setCurrentStep(previousStepId);
     }
   };
 
@@ -128,13 +153,16 @@ export function EnrollmentForm() {
           </h1>
         </div>
 
-        <StepIndicator currentStep={currentStep} onStepClick={goToStep} />
+        <StepIndicator
+          currentStep={currentStep}
+          onStepClick={(stepId) => void goToStep(stepId)}
+        />
 
         {currentStep === "course" && <CourseSelectStep />}
         {currentStep === "applicant" && <ApplicantInfoStep />}
         {currentStep === "confirm" && (
           <ConfirmStep
-            onGoToStep={goToStep}
+            onGoToStep={setCurrentStep}
             onSubmit={() => void handleConfirmSubmit()}
           />
         )}

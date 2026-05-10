@@ -1,6 +1,6 @@
 "use client";
 
-// 현재 멀티스텝 위치를 보여주고, 완료된 스텝으로 이동할 수 있게 하는 기본 인디케이터입니다.
+// 현재 멀티스텝 위치를 보여주고, 미래 단계 클릭 시 루트 폼의 검증 로직을 거치게 합니다.
 import { ENROLLMENT_STEPS } from "@/features/enrollment/constants";
 import type { EnrollmentStepId } from "@/features/enrollment/constants";
 
