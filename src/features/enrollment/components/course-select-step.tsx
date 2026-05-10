@@ -39,6 +39,17 @@ function getRemainingCapacity(course: Course) {
   return Math.max(course.maxCapacity - course.currentEnrollment, 0);
 }
 
+function filterCoursesByCategory(
+  courses: Course[],
+  category: CourseCategory | undefined,
+) {
+  if (!category) {
+    return courses;
+  }
+
+  return courses.filter((course) => course.category === category);
+}
+
 export function CourseSelectStep() {
   const [selectedCategory, setSelectedCategory] = useState<
     CourseCategory | undefined
@@ -52,9 +63,8 @@ export function CourseSelectStep() {
   const selectedCourseId = watch("courseId");
   const { selectedType, switchEnrollmentType } = useEnrollmentTypeSwitch();
 
-  const coursesQuery = useCoursesQuery({ category: selectedCategory });
-  const allCoursesQuery = useCoursesQuery();
-  const selectedCourse = allCoursesQuery.data?.courses.find(
+  const coursesQuery = useCoursesQuery();
+  const selectedCourse = coursesQuery.data?.courses.find(
     (course) => course.id === selectedCourseId,
   );
 
@@ -79,7 +89,10 @@ export function CourseSelectStep() {
     typeof errors.courseId?.message === "string" ? errors.courseId.message : "";
   const typeErrorMessage =
     typeof errors.type?.message === "string" ? errors.type.message : "";
-  const courses = coursesQuery.data?.courses ?? [];
+  const courses = filterCoursesByCategory(
+    coursesQuery.data?.courses ?? [],
+    selectedCategory,
+  );
 
   return (
     <section className="flex flex-col gap-6">

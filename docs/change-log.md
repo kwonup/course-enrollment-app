@@ -360,6 +360,32 @@
 
 ### 변경 사항
 
+- 1단계 강의 카테고리 필터를 서버 재조회 방식에서 클라이언트 필터링 방식으로 변경했다.
+- `CourseSelectStep`에서 전체 강의 목록을 한 번만 조회하고, 선택한 카테고리에 따라 이미 받은 배열을 필터링하도록 했다.
+- 선택한 강의 요약도 별도 전체 목록 query가 아니라 동일한 강의 목록 query 결과를 재사용하도록 정리했다.
+
+### 변경 이유
+
+- 마케팅/비즈니스 등 카테고리 버튼 클릭 시 새로운 `/api/courses?category=...` 요청이 발생하면, 장시간 방치 후 MSW service worker 상태에 따라 mock 요청이 실제 Next 서버로 빠질 수 있었다.
+- 현재 강의 데이터는 정적 mock 데이터이므로 카테고리 전환마다 서버 요청을 보낼 필요가 없다.
+- MSW handler의 category 필터 기능은 Mock API 명세 검증용으로 유지하되, UI는 최초 전체 조회 결과를 사용해 안정성을 높였다.
+
+### 영향 범위
+
+- `src/features/enrollment/components/course-select-step.tsx`
+
+### 검증 내용
+
+- `npm run build`로 TypeScript 타입 검사와 Next.js production build를 확인했다.
+
+### 남은 과제
+
+- 개발 서버에서 장시간 대기 후 마케팅/비즈니스 카테고리 전환 시 에러가 재발하지 않는지 수동 점검
+
+## 2026-05-10
+
+### 변경 사항
+
 - 강의 목록 query의 `staleTime`을 `Infinity`로 설정해 한 번 불러온 mock 강의 데이터를 자동 stale 처리하지 않도록 했다.
 - 강의 목록 query의 `refetchOnMount`, `refetchOnReconnect`, `refetchOnWindowFocus`를 비활성화했다.
 
