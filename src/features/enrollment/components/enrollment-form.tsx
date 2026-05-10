@@ -13,24 +13,35 @@ import type {
   EnrollmentFormInputValues,
   EnrollmentFormSchemaValues,
 } from "@/features/enrollment/schemas";
+import type { EnrollmentType } from "@/features/enrollment/types";
 import { ApplicantInfoStep } from "@/features/enrollment/components/applicant-info-step";
 import { ConfirmStep } from "@/features/enrollment/components/confirm-step";
 import { CourseSelectStep } from "@/features/enrollment/components/course-select-step";
 import { StepIndicator } from "@/features/enrollment/components/step-indicator";
 
-const stepValidationFields: Record<
-  EnrollmentStepId,
-  FieldPath<EnrollmentFormInputValues>[]
-> = {
-  course: ["courseId", "type"],
-  applicant: [
-    "applicant.name",
-    "applicant.email",
-    "applicant.phone",
-    "applicant.motivation",
-  ],
-  confirm: ["agreedToTerms"],
-};
+const applicantStepFields: FieldPath<EnrollmentFormInputValues>[] = [
+  "applicant.name",
+  "applicant.email",
+  "applicant.phone",
+  "applicant.motivation",
+];
+
+function getStepValidationFields(
+  stepId: EnrollmentStepId,
+  enrollmentType: EnrollmentType,
+): FieldPath<EnrollmentFormInputValues>[] {
+  if (stepId === "course") {
+    return ["courseId", "type"];
+  }
+
+  if (stepId === "applicant") {
+    return enrollmentType === "group"
+      ? [...applicantStepFields, "group"]
+      : applicantStepFields;
+  }
+
+  return ["agreedToTerms"];
+}
 
 function getStepIndex(stepId: EnrollmentStepId) {
   return ENROLLMENT_STEPS.findIndex((step) => step.id === stepId);
@@ -60,6 +71,7 @@ export function EnrollmentForm() {
   });
 
   const currentStep = form.watch("currentStep");
+  const selectedType = form.watch("type");
 
   const goToStep = (stepId: EnrollmentStepId) => {
     form.setValue("currentStep", stepId, {
@@ -71,7 +83,7 @@ export function EnrollmentForm() {
 
   const goToNextStep = async () => {
     const isCurrentStepValid = await form.trigger(
-      stepValidationFields[currentStep],
+      getStepValidationFields(currentStep, selectedType),
       {
         shouldFocus: true,
       },

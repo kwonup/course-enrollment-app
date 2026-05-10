@@ -316,3 +316,67 @@
 - 단체 신청 조건부 필드 구현
 - 최종 확인 및 제출 UI 구현
 - 서버 에러를 React Hook Form field error로 반영하는 로직 구현
+
+## 2026-05-10
+
+### 변경 사항
+
+- 신청 유형이 `group`일 때만 표시되는 단체 신청 조건부 필드를 구현했다.
+- 단체명, 신청 인원수, 담당자 연락처, 참가자 이름/이메일 필드를 추가했다.
+- 신청 인원수 변경 시 참가자 배열 길이를 자동으로 동기화하는 유틸을 추가했다.
+- 단체 신청으로 전환하면 기본 단체 데이터를 생성하고, 개인 신청으로 전환하면 `group` 필드를 `unregister`로 제거하도록 했다.
+- 이미 입력된 단체 데이터가 있을 때 개인 신청으로 전환하면 확인 대화상자를 표시하도록 했다.
+- 신청 유형 전환 로직을 `useEnrollmentTypeSwitch` hook으로 분리하고, 단체 폼 유틸을 `src/features/enrollment/utils/group-form.ts`로 분리했다.
+- 단체 신청일 때 다음 단계 이동 검증 대상에 `group` 필드를 포함하도록 멀티스텝 이동 로직을 보강했다.
+- 단체 신청 조건부 필드 완료 항목을 `docs/feature-checklist.md`에 반영했다.
+
+### 변경 이유
+
+- 단체 신청 데이터는 개인 신청 payload에 남으면 안 되므로 개인 전환 시 RHF 상태에서 `group` 자체를 제거하도록 했다.
+- 사용자가 입력한 단체 데이터를 실수로 잃지 않도록 입력된 값이 있는 경우에만 전환 확인을 거치게 했다.
+- 참가자 배열 길이 동기화와 전환 로직은 여러 컴포넌트에서 재사용될 수 있어 컴포넌트 내부에 몰아넣지 않고 hook/util로 분리했다.
+
+### 영향 범위
+
+- `src/features/enrollment/components/applicant-info-step.tsx`
+- `src/features/enrollment/components/course-select-step.tsx`
+- `src/features/enrollment/components/enrollment-form.tsx`
+- `src/features/enrollment/hooks/use-enrollment-type-switch.ts`
+- `src/features/enrollment/hooks/index.ts`
+- `src/features/enrollment/utils/group-form.ts`
+- `docs/feature-checklist.md`
+
+### 검증 내용
+
+- `npm run build`로 TypeScript 타입 검사와 Next.js production build를 확인했다.
+
+### 남은 과제
+
+- 최종 확인 및 제출 UI 구현
+- 제출 payload 변환 함수 구현
+- 서버 에러를 React Hook Form field error로 반영하는 로직 구현
+
+## 2026-05-10
+
+### 변경 사항
+
+- 단체 신청 참가자 이름/이메일 필드 하단의 에러 메시지 영역을 항상 렌더링하도록 수정했다.
+- 참가자 명단 전체 에러 메시지 영역에도 기본 높이를 부여했다.
+
+### 변경 이유
+
+- 참가자 명단 입력 중 검증 메시지가 나타날 때 입력 카드 높이가 갑자기 변하지 않도록 레이아웃 공간을 미리 확보하기 위함이다.
+
+### 영향 범위
+
+- `src/features/enrollment/components/applicant-info-step.tsx`
+
+### 검증 내용
+
+- `npm run build`로 TypeScript 타입 검사와 Next.js production build를 확인했다.
+
+### 남은 과제
+
+- 최종 확인 및 제출 UI 구현
+- 제출 payload 변환 함수 구현
+- 서버 에러를 React Hook Form field error로 반영하는 로직 구현

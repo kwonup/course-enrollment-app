@@ -11,7 +11,10 @@ import {
 import type { EnrollmentFormInputValues } from "@/features/enrollment/schemas";
 import type { Course, EnrollmentType } from "@/features/enrollment/types";
 import { isApiError } from "@/features/enrollment/api";
-import { useCoursesQuery } from "@/features/enrollment/hooks";
+import {
+  useCoursesQuery,
+  useEnrollmentTypeSwitch,
+} from "@/features/enrollment/hooks";
 import { CourseCard } from "@/features/enrollment/components/course-card";
 
 const enrollmentTypeOptions: Array<{
@@ -54,7 +57,7 @@ export function CourseSelectStep() {
     clearErrors,
   } = useFormContext<EnrollmentFormInputValues>();
   const selectedCourseId = watch("courseId");
-  const selectedType = watch("type");
+  const { selectedType, switchEnrollmentType } = useEnrollmentTypeSwitch();
 
   const coursesQuery = useCoursesQuery({ category: selectedCategory });
   const allCoursesQuery = useCoursesQuery();
@@ -76,12 +79,7 @@ export function CourseSelectStep() {
   };
 
   const handleSelectType = (type: EnrollmentType) => {
-    setValue("type", type, {
-      shouldDirty: true,
-      shouldTouch: true,
-      shouldValidate: true,
-    });
-    clearErrors("type");
+    switchEnrollmentType(type);
   };
 
   const courseErrorMessage =
